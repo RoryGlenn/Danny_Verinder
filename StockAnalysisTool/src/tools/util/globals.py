@@ -1,7 +1,7 @@
 "globals.py - Uses global variables that are shared between files in order to write to the log file."
 
-from util.log    import Log
-from util.config import Config
+from .log    import Log
+from .config import Config
 
 class Globals:
     log:    Log    = Log()

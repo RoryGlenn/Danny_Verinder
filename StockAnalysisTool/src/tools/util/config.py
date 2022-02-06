@@ -4,8 +4,8 @@ import json
 import os
 import sys
 
-from pprint     import pprint
-from util.enums import *
+# from util.enums import *
+from .enums import *
 
 
 class Config():

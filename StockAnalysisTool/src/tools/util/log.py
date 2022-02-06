@@ -1,13 +1,13 @@
 import datetime
 import os
 
-from util.enums import FileMode
+from .enums import *
 
 
 class Log():
     def __init__(self):
-        self.log_directory_path = "StockAnalysisTool/src/logs"
-        self.log_file_path      = "StockAnalysisTool/src/logs" + "/" + str(datetime.date.today()) + ".txt"
+        self.log_directory_path = "StockAnalysisTool/logs"
+        self.log_file_path      = "StockAnalysisTool/logs" + "/" + str(datetime.date.today()) + ".txt"
 
     def get_current_time(self) -> str:
         return datetime.datetime.now().strftime("%H:%M:%S")
@@ -41,7 +41,7 @@ class Log():
     def write(self, text):
         """Writes to the end of the log file"""
         try:
-            file_path="StockAnalysisTool/src/logs/" + str(datetime.date.today()) + ".txt"
+            file_path="StockAnalysisTool/logs/" + str(datetime.date.today()) + ".txt"
             with open(file_path, FileMode.WRITE_APPEND, encoding='utf-8') as file:
                 file.write(f"{text}\n")
         except Exception as e:

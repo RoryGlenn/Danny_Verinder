@@ -1,8 +1,10 @@
 import os
 
-from trading_view_web_scrapper import TradingViewWebScraper
-from util.globals              import G
+# from trading_view_web_scraper import TradingViewWebScraper
+# from util.globals             import G
 
+from tools.scraper.trading_view_web_scraper import TradingViewWebScraper
+from tools.util.globals                     import G
 
 def run() -> None:
     G.log.directory_create()

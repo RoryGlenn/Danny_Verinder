@@ -2,12 +2,13 @@ import time
 
 import selenium.webdriver as webdriver
 
-from selenium.webdriver.support              import expected_conditions as EC
-from selenium.webdriver.common.by            import By
-from selenium.webdriver.chrome.options       import Options
-from pprint                                  import PrettyPrinter, pprint
-from util.enums                              import *
-from util.globals                            import G
+from selenium.webdriver.support.expected_conditions import NoSuchElementException
+from selenium.webdriver.common.by                   import By
+from selenium.webdriver.chrome.options              import Options
+from pprint                                         import PrettyPrinter
+
+from ..util.enums   import *
+from ..util.globals import G
 
 
 class TradingViewWebScraper():
@@ -121,7 +122,7 @@ class TradingViewWebScraper():
                     self.set_shares(stock_symbol, data)
                     self.set_eps(stock_symbol, data)
                     self.set_dividends(stock_symbol, data)
-                except EC.NoSuchElementException:
+                except NoSuchElementException:
                     G.log.print_and_log(f"No such element was found: {stock_symbol}")
                 except Exception as e:
                     G.log.print_and_log(e=e, error_type=type(e).__name__, filename=__file__, tb_lineno=e.__traceback__.tb_lineno)

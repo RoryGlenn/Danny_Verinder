@@ -4,7 +4,6 @@ CONFIG_JSON        = 'StockAnalysisTool/json/config.json'
 
 
 class FileMode:
-
     """
     Open text file for reading.  The stream is positioned at the
         beginning of the file.    
@@ -95,3 +94,15 @@ class TradingViewData:
     LAST_YEAR_REVENUE = 'Last Year Revenue (FY)'
     TOTAL_REVENUE = 'Total Revenue (FY)'
     FREE_CASH_FLOW = 'Free Cash Flow (TTM)'
+
+    # these values below are scraped differently than the values above
+    CURRENT_PRICE = 'Current Price'
+    DIVIDENDS = 'Dividends'
+
+
+    CURRENT_PRICE_XPATH = '//div[starts-with(@class, "tv-symbol-price-quote__value js-symbol-last")]'
+    GENERAL_DATA_XPATH = '//div[starts-with(@class, "tv-widget-fundamentals__item")]'
+
+
+class Browser:
+    WINDOW_SIZE = "--window-size=1920,1200"

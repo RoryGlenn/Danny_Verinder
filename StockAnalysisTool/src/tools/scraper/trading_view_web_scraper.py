@@ -29,14 +29,14 @@ class TradingViewWebScraper():
             # load chrome without gui
             options          = Options()
             options.headless = True
-            options.add_argument("--window-size=1920,1200")
+            options.add_argument(Browser.WINDOW_SIZE)
             self.browser = webdriver.Chrome(options=options, executable_path=CHROME_DRIVER_PATH)            
         return
 
     def set_current_price(self, stock_symbol: str) -> None:
         if stock_symbol not in self.current_price.keys():
             try:
-                categories = self.browser.find_elements(By.XPATH, '//div[starts-with(@class, "tv-symbol-price-quote__value js-symbol-last")]')
+                categories = self.browser.find_elements(By.XPATH, TradingViewData.CURRENT_PRICE_XPATH)
 
                 for category in categories:
                     self.current_price[stock_symbol] = category.text
@@ -45,51 +45,51 @@ class TradingViewWebScraper():
         return
 
     def set_shares(self, stock_symbol: str, data: list) -> None:
-        if 'Total Shares Outstanding (MRQ)' in data:
-            self.total_shares_outstanding[stock_symbol] = dict({'Total Shares Outstanding (MRQ)': '-'})
+        if TradingViewData.TOTAL_SHARES in data:
+            self.total_shares_outstanding[stock_symbol] = dict({TradingViewData.TOTAL_SHARES: '-'})
 
             while len(data) > 0:
-                if data.pop(0) == 'Total Shares Outstanding (MRQ)':
-                    self.total_shares_outstanding[stock_symbol]['Total Shares Outstanding (MRQ)'] = data.pop(0)
+                if data.pop(0) == TradingViewData.TOTAL_SHARES:
+                    self.total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES] = data.pop(0)
                     break
         return
 
     def set_dividends(self, stock_symbol: str, data: list) -> None:
-        if 'Dividends' in data:
-            if data[0] == 'Dividends':
+        if TradingViewData.DIVIDENDS in data:
+            if data[0] == TradingViewData.DIVIDENDS:
                 self.dividends[stock_symbol] = [{
-                    'Dividends Paid (FY)':      '-',
-                    'Dividends Yield (FY)':     '-',
-                    'Dividends per Share (FY)': '-'}]
+                    TradingViewData.DIVIDENDS_PAID:      '-',
+                    TradingViewData.DIVIDENDS_YIELD:     '-',
+                    TradingViewData.DIVIDENDS_PER_SHARE: '-'}]
 
                 while len(data) > 0:
                     dividend_title = data.pop(0)
 
-                    if dividend_title == 'Dividends Paid (FY)':
-                        self.dividends[stock_symbol][0]['Dividends Paid (FY)'] = data.pop(0)
-                    elif dividend_title == 'Dividends Yield (FY)':
-                        self.dividends[stock_symbol][0]['Dividends Yield (FY)'] = data.pop(0)
-                    elif dividend_title == 'Dividends per Share (FY)':
-                        self.dividends[stock_symbol][0]['Dividends per Share (FY)'] = data.pop(0)
+                    if dividend_title == TradingViewData.DIVIDENDS_PAID:
+                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PAID] = data.pop(0)
+                    elif dividend_title == TradingViewData.DIVIDENDS_YIELD:
+                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_YIELD] = data.pop(0)
+                    elif dividend_title == TradingViewData.DIVIDENDS_PER_SHARE:
+                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PER_SHARE] = data.pop(0)
         return
     
     def set_eps(self, stock_symbol: str, data: list) -> None:
         # price to earnings ratio
-        if 'Price to Revenue Ratio (TTM)' in data:
-            self.eps[stock_symbol] = dict({'Price to Revenue Ratio (TTM)': '-'})
+        if TradingViewData.PRICE_TO_EARNINGS_RATIO in data:
+            self.eps[stock_symbol] = dict({TradingViewData.PRICE_TO_EARNINGS_RATIO: '-'})
 
             while len(data) > 0:
-                if data.pop(0) == 'Price to Revenue Ratio (TTM)':
-                    self.eps[stock_symbol]['Price to Revenue Ratio (TTM)'] = data.pop(0)
+                if data.pop(0) == TradingViewData.PRICE_TO_EARNINGS_RATIO:
+                    self.eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO] = data.pop(0)
                     break
         return
 
     def set_data(self, stock_symbol: str) -> None:
         self.data[stock_symbol] = {
-            'Current Price':                  self.current_price[stock_symbol],
-            'Total Shares Outstanding (MRQ)': self.total_shares_outstanding[stock_symbol]['Total Shares Outstanding (MRQ)'],
-            'Dividends':                      self.dividends[stock_symbol][0], 
-            'Price to Revenue Ratio (TTM)':   self.eps[stock_symbol]['Price to Revenue Ratio (TTM)']}
+            TradingViewData.CURRENT_PRICE:           self.current_price[stock_symbol],
+            TradingViewData.TOTAL_SHARES:            self.total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES],
+            TradingViewData.DIVIDENDS:               self.dividends[stock_symbol][0], 
+            TradingViewData.PRICE_TO_EARNINGS_RATIO: self.eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO]}
         return
     
     def reset_data(self) -> None:
@@ -113,7 +113,7 @@ class TradingViewWebScraper():
 
             self.set_current_price(stock_symbol)
 
-            categories = self.browser.find_elements(By.XPATH, '//div[starts-with(@class, "tv-widget-fundamentals__item")]')
+            categories = self.browser.find_elements(By.XPATH, TradingViewData.GENERAL_DATA_XPATH)
 
             for category in categories:
                 try:

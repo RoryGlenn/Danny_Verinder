@@ -4,14 +4,13 @@ import json
 import os
 import sys
 
-from pprint  import pprint
-from util.enums   import *
-
+from pprint     import pprint
+from util.enums import *
 
 
 class Config():
     def __init__(self) -> None:
-        self.stock_list:    list = []
+        self.stock_list = []
         self.set_values()
         return
     

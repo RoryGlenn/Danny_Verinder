@@ -1,12 +1,12 @@
-CHROME_DRIVER_PATH = 'src/chromedriver.exe'
+CHROME_DRIVER_PATH = 'StockAnalysisTool/src/chromedriver.exe'
 
 URLS = [
     'https://www.tradingview.com/symbols/' # put the exchange and stock name at the end. NASDAQ-MSFT/
 ]
 
-MAIN_PAGE = 'https://www.tradingview.com/symbols/'
+TRADING_VIEW_URL = 'https://www.tradingview.com/symbols/'
 
-CONFIG_JSON = 'src/config.json'
+CONFIG_JSON = 'StockAnalysisTool/src/config.json'
 
 EXCHANGES = ['NYSE', 'NASDAQ', 'AMEX']
 

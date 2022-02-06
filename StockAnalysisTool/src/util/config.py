@@ -33,4 +33,3 @@ class Config():
         return
 
 
-g_config: Config = Config()

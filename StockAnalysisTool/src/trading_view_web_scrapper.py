@@ -6,7 +6,6 @@ from selenium.webdriver.support              import expected_conditions as EC
 from selenium.webdriver.common.by            import By
 from selenium.webdriver.chrome.options       import Options
 from pprint                                  import PrettyPrinter, pprint
-from util.config                             import g_config
 from util.enums                              import *
 from util.globals                            import G
 
@@ -19,7 +18,7 @@ class TradingViewWebScraper():
         self.total_shares_outstanding = dict()
         self.eps                      = dict()
         self.dividends                = dict()
-        self.data                     = dict() # a dictionary[symbol] that holds dataframes
+        self.data                     = dict()
         return
 
     def set_gui(self) -> None:
@@ -39,8 +38,8 @@ class TradingViewWebScraper():
             try:
                 categories = self.browser.find_elements(By.XPATH, '//div[starts-with(@class, "tv-symbol-price-quote__value js-symbol-last")]')
 
-                for c in categories:
-                    self.current_price[stock_symbol] = c.text
+                for category in categories:
+                    self.current_price[stock_symbol] = category.text
             except Exception as e:
                 G.log.print_and_log(e=e, error_type=type(e).__name__, filename=__file__, tb_lineno=e.__traceback__.tb_lineno)
         return
@@ -104,8 +103,8 @@ class TradingViewWebScraper():
         stock_count = 1
         self.set_gui()
 
-        for stock_symbol in g_config.stock_list:
-            G.log.print_and_log(f"Fetching data for {stock_symbol} {stock_count} / {len(g_config.stock_list)}")
+        for stock_symbol in G.config.stock_list:
+            G.log.print_and_log(f"Fetching data for {stock_symbol} {stock_count} / {len(G.config.stock_list)}")
             
             url = TRADING_VIEW_URL + stock_symbol + '/'
             self.browser.get(url)
@@ -114,7 +113,6 @@ class TradingViewWebScraper():
 
             self.set_current_price(stock_symbol)
 
-            # get the div element that is associated with divedends
             categories = self.browser.find_elements(By.XPATH, '//div[starts-with(@class, "tv-widget-fundamentals__item")]')
 
             for category in categories:
@@ -134,6 +132,4 @@ class TradingViewWebScraper():
 
         G.log.print_and_log(f"{PrettyPrinter().pformat(self.data)}")
         self.browser.quit()
-
-
-
+        return

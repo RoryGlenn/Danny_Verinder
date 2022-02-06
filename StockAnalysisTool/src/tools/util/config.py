@@ -5,7 +5,6 @@ import os
 import sys
 
 from .enums   import *
-from .globals import G
 
 
 class Config():
@@ -24,10 +23,10 @@ class Config():
                         self.stock_list.append(str(symbol).upper())
                     self.stock_list.sort()
                 except Exception as e:
-                    G.log.print_and_log(e=e, error_type=type(e).__name__, filename=__file__, tb_lineno=e.__traceback__.tb_lineno)
+                    print(e)
                     sys.exit(1)
         else:
-            G.log.print_and_log(message="Could not find config.json file")
+            print("Could not find config.json file")
             sys.exit(0)
         return
 

@@ -53,6 +53,11 @@ class FileMode:
 
 
 class TradingViewData:
+    """
+    These constants are used to access data through the following link
+        https://www.tradingview.com/symbols/enter_symbol_here
+
+    """
     MARKET_CAP = 'Market Capitalization'
     ENTERPRISE_VALUE = 'Enterprise Value (MRQ)'
     ENTERPRISE_VALUE_EBITDA = 'Enterprise Value/EBITDA (TTM)'
@@ -95,13 +100,11 @@ class TradingViewData:
     TOTAL_REVENUE = 'Total Revenue (FY)'
     FREE_CASH_FLOW = 'Free Cash Flow (TTM)'
 
-    # these values below are scraped differently than the values above
-    CURRENT_PRICE = 'Current Price'
-    DIVIDENDS = 'Dividends'
-
-
+    # these values below are used differently than the values above
+    CURRENT_PRICE       = 'Current Price'
+    DIVIDENDS           = 'Dividends'
     CURRENT_PRICE_XPATH = '//div[starts-with(@class, "tv-symbol-price-quote__value js-symbol-last")]'
-    GENERAL_DATA_XPATH = '//div[starts-with(@class, "tv-widget-fundamentals__item")]'
+    GENERAL_DATA_XPATH  = '//div[starts-with(@class, "tv-widget-fundamentals__item")]'
 
 
 class Browser:

@@ -12,52 +12,53 @@ from ..util.globals                                 import G
 
 class TradingViewWebScraper():
     def __init__(self, is_gui: bool=False) -> None:
-        self.is_gui                   = is_gui
-        self.browser                  = None
-        self.current_price            = dict()
-        self.total_shares_outstanding = dict()
-        self.eps                      = dict()
-        self.dividends                = dict()
-        self.data                     = dict()
+        self._is_gui                   = is_gui
+        self._browser                  = None
+        self._current_price            = dict()
+        self._total_shares_outstanding = dict()
+        self._eps                      = dict()
+        self._dividends                = dict()
+        self._trading_below_value            = dict()
+        self._data                     = dict()
         return
 
-    def set_gui(self) -> None:
-        if self.is_gui:
+    def __set_gui(self) -> None:
+        if self._is_gui:
             # load chrome with gui
-            self.browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH)
+            self._browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH)
         else:
             # load chrome without gui
             options          = Options()
             options.headless = True
             options.add_argument(Browser.WINDOW_SIZE)
-            self.browser = webdriver.Chrome(options=options, executable_path=CHROME_DRIVER_PATH)            
+            self._browser = webdriver.Chrome(options=options, executable_path=CHROME_DRIVER_PATH)            
         return
 
-    def set_current_price(self, stock_symbol: str) -> None:
-        if stock_symbol not in self.current_price.keys():
+    def __set_current_price(self, stock_symbol: str) -> None:
+        if stock_symbol not in self._current_price.keys():
             try:
-                categories = self.browser.find_elements(By.XPATH, TradingViewData.CURRENT_PRICE_XPATH)
+                categories = self._browser.find_elements(By.XPATH, TradingViewData.CURRENT_PRICE_XPATH)
 
                 for category in categories:
-                    self.current_price[stock_symbol] = category.text
+                    self._current_price[stock_symbol] = category.text
             except Exception as e:
                 G.log.print_and_log(e=e, error_type=type(e).__name__, filename=__file__, tb_lineno=e.__traceback__.tb_lineno)
         return
 
-    def set_shares(self, stock_symbol: str, data: list) -> None:
+    def __set_shares(self, stock_symbol: str, data: list) -> None:
         if TradingViewData.TOTAL_SHARES in data:
-            self.total_shares_outstanding[stock_symbol] = dict({TradingViewData.TOTAL_SHARES: '-'})
+            self._total_shares_outstanding[stock_symbol] = dict({TradingViewData.TOTAL_SHARES: '-'})
 
             while len(data) > 0:
                 if data.pop(0) == TradingViewData.TOTAL_SHARES:
-                    self.total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES] = data.pop(0)
+                    self._total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES] = data.pop(0)
                     break
         return
 
-    def set_dividends(self, stock_symbol: str, data: list) -> None:
+    def __set_dividends(self, stock_symbol: str, data: list) -> None:
         if TradingViewData.DIVIDENDS in data:
             if data[0] == TradingViewData.DIVIDENDS:
-                self.dividends[stock_symbol] = [{
+                self._dividends[stock_symbol] = [{
                     TradingViewData.DIVIDENDS_PAID:      '-',
                     TradingViewData.DIVIDENDS_YIELD:     '-',
                     TradingViewData.DIVIDENDS_PER_SHARE: '-'}]
@@ -66,70 +67,94 @@ class TradingViewWebScraper():
                     dividend_title = data.pop(0)
 
                     if dividend_title == TradingViewData.DIVIDENDS_PAID:
-                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PAID] = data.pop(0)
+                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PAID] = data.pop(0)
                     elif dividend_title == TradingViewData.DIVIDENDS_YIELD:
-                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_YIELD] = data.pop(0)
+                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_YIELD] = data.pop(0)
                     elif dividend_title == TradingViewData.DIVIDENDS_PER_SHARE:
-                        self.dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PER_SHARE] = data.pop(0)
+                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PER_SHARE] = data.pop(0)
         return
     
-    def set_eps(self, stock_symbol: str, data: list) -> None:
+    def __set_eps(self, stock_symbol: str, data: list) -> None:
         # price to earnings ratio
         if TradingViewData.PRICE_TO_EARNINGS_RATIO in data:
-            self.eps[stock_symbol] = dict({TradingViewData.PRICE_TO_EARNINGS_RATIO: '-'})
+            self._eps[stock_symbol] = dict({TradingViewData.PRICE_TO_EARNINGS_RATIO: '-'})
 
             while len(data) > 0:
                 if data.pop(0) == TradingViewData.PRICE_TO_EARNINGS_RATIO:
-                    self.eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO] = data.pop(0)
+                    self._eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO] = data.pop(0)
                     break
         return
 
-    def set_data(self, stock_symbol: str) -> None:
-        self.data[stock_symbol] = {
-            TradingViewData.CURRENT_PRICE:           self.current_price[stock_symbol],
-            TradingViewData.TOTAL_SHARES:            self.total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES],
-            TradingViewData.DIVIDENDS:               self.dividends[stock_symbol][0], 
-            TradingViewData.PRICE_TO_EARNINGS_RATIO: self.eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO]}
+    def __set_data(self, stock_symbol: str) -> None:
+        self._data[stock_symbol] = {
+            TradingViewData.CURRENT_PRICE:           self._current_price[stock_symbol],
+            TradingViewData.TOTAL_SHARES:            self._total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES],
+            TradingViewData.DIVIDENDS:               self._dividends[stock_symbol][0], 
+            TradingViewData.PRICE_TO_EARNINGS_RATIO: self._eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO],
+            TradingViewData.TRADING_BELOW_BALUE:     self._trading_below_value[stock_symbol][TradingViewData.TRADING_BELOW_BALUE]
+        }
         return
     
-    def reset_data(self) -> None:
-        self.current_price            = dict()
-        self.total_shares_outstanding = dict()
-        self.eps                      = dict()
-        self.dividends                = dict()
+
+    def __set_trading_below(self, stock_symbol: str, data: list) -> None:
+        """
+            Trading below cash can be illustrated by a company that holds $2,000,000 in cash reserves,
+            has $1,000,000 in outstanding liabilities, and has a total market capitalization equal to $650,000. 
+            Its cash reserves less its liabilities are equal to $1,000,000 ($2MM - $1MM = $1MM), 
+            while the total value of its stock is only $650,000.
+        
+        """
+
+        if TradingViewData.DEBT_TO_EQUITY_RATIO in data:
+            self._trading_below_value[stock_symbol] = dict({"Trading Below Value": False})
+
+            while len(data) > 0:
+                if data.pop(0) == TradingViewData.DEBT_TO_EQUITY_RATIO:
+                    debt_to_equity_ratio = float(data.pop(0))
+                    self._trading_below_value[stock_symbol][TradingViewData.DEBT_TO_EQUITY_RATIO] = False if debt_to_equity_ratio > 0 else True
+                    break
+        return
+
+
+    def __reset_data(self) -> None:
+        self._current_price            = dict()
+        self._total_shares_outstanding = dict()
+        self._eps                      = dict()
+        self._dividends                = dict()
         return
 
     def scrape_data(self) -> None:
         stock_count = 1
-        self.set_gui()
+        self.__set_gui()
 
         for stock_symbol in G.config.stock_list:
             G.log.print_and_log(f"Fetching data for {stock_symbol} {stock_count} / {len(G.config.stock_list)}")
             
             url = TRADING_VIEW_URL + stock_symbol + '/'
-            self.browser.get(url)
+            self._browser.get(url)
 
-            time.sleep(0.6)
+            time.sleep(1)
 
-            self.set_current_price(stock_symbol)
+            self.__set_current_price(stock_symbol)
 
-            categories = self.browser.find_elements(By.XPATH, TradingViewData.GENERAL_DATA_XPATH)
+            categories = self._browser.find_elements(By.XPATH, TradingViewData.GENERAL_DATA_XPATH)
 
             for category in categories:
                 try:
                     data = category.text.split('\n')
-                    self.set_shares(stock_symbol, data)
-                    self.set_eps(stock_symbol, data)
-                    self.set_dividends(stock_symbol, data)
+                    self.__set_shares(stock_symbol, data)
+                    self.__set_eps(stock_symbol, data)
+                    self.__set_dividends(stock_symbol, data)
+                    self.__set_trading_below(stock_symbol, data)
                 except NoSuchElementException:
                     G.log.print_and_log(f"No such element was found: {stock_symbol}")
                 except Exception as e:
                     G.log.print_and_log(e=e, error_type=type(e).__name__, filename=__file__, tb_lineno=e.__traceback__.tb_lineno)
 
-            self.set_data(stock_symbol)
-            self.reset_data()
+            self.__set_data(stock_symbol)
+            self.__reset_data()
             stock_count += 1
 
-        G.log.print_and_log(f"{PrettyPrinter().pformat(self.data)}")
-        self.browser.quit()
+        G.log.print_and_log(f"{PrettyPrinter().pformat(self._data)}")
+        self._browser.quit()
         return

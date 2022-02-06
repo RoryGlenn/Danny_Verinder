@@ -103,6 +103,7 @@ class TradingViewData:
     # these values below are used differently than the values above
     CURRENT_PRICE       = 'Current Price'
     DIVIDENDS           = 'Dividends'
+    TRADING_BELOW_BALUE = "Trading Below Value"
     CURRENT_PRICE_XPATH = '//div[starts-with(@class, "tv-symbol-price-quote__value js-symbol-last")]'
     GENERAL_DATA_XPATH  = '//div[starts-with(@class, "tv-widget-fundamentals__item")]'
 

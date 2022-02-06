@@ -110,7 +110,7 @@ class TradingViewWebScraper():
             url = TRADING_VIEW_URL + stock_symbol + '/'
             self.browser.get(url)
 
-            time.sleep(0.6)
+            time.sleep(0.5)
 
             self.set_current_price(stock_symbol)
 

@@ -32,7 +32,7 @@ class Log():
 
             # If its out first time opening the file since we started up,
             # write a new line to make it a little neater
-            with open(self.log_file_path, FileMode.WRITE_APPEND) as file:
+            with open(self.log_file_path, FileMode.WRITE_APPEND, encoding='utf-8') as file:
                 file.write("\n=========================================================================================\n")
         except Exception as e:
             print(f"ERROR: || {e}, {type(e).__name__} {__file__} {e.__traceback__.tb_lineno}" )
@@ -42,7 +42,7 @@ class Log():
         """Writes to the end of the log file"""
         try:
             file_path="StockAnalysisTool/src/logs/" + str(datetime.date.today()) + ".txt"
-            with open(file_path, FileMode.WRITE_APPEND) as file:
+            with open(file_path, FileMode.WRITE_APPEND, encoding='utf-8') as file:
                 file.write(f"{text}\n")
         except Exception as e:
             print(f"ERROR: || {e}, {type(e).__name__} {__file__} {e.__traceback__.tb_lineno}" )

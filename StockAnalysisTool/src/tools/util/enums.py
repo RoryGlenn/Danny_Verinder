@@ -54,46 +54,44 @@ class FileMode:
 
 
 class TradingViewData:
-    data = [
-        'Market Capitalization',
-        'Enterprise Value (MRQ)',
-        'Enterprise Value/EBITDA (TTM)',
-        'Total Shares Outstanding (MRQ)',
-        'Number of Employees',
-        'Number of Shareholders',
-        'Price to Earnings Ratio (TTM)',
-        'Price to Revenue Ratio (TTM)',
-        'Price to Book (FY)',
-        'Price to Sales (FY)',
-        'Quick Ratio (MRQ)',
-        'Current Ratio (MRQ)',
-        'Debt to Equity Ratio (MRQ)',
-        'Net Debt (MRQ)',
-        'Total Debt (MRQ)',
-        'Total Assets (MRQ)',
-        'Return on Assets (TTM)',
-        'Return on Equity (TTM)',
-        'Return on Invested Capital (TTM)',
-        'Revenue per Employee (TTM)',
-        'Average Volume (10 day)',
-        '1-Year Beta',
-        '52 Week High',
-        '52 Week Low',
-        'Dividends Paid (FY)',
-        'Dividends Yield (FY)',
-        'Dividends per Share (FY)',
-        'Net Margin (TTM)',
-        'Gross Margin (TTM)',
-        'Operating Margin (TTM)',
-        'Pretax Margin (TTM)',
-        'Basic EPS (FY)',
-        'Basic EPS (TTM)',
-        'EPS Diluted (FY)',
-        'Net Income (FY)',
-        'EBITDA (TTM)',
-        'Gross Profit (MRQ)',
-        'Gross Profit (FY)',
-        'Last Year Revenue (FY)',
-        'Total Revenue (FY)',
-        'Free Cash Flow (TTM)'
-        ]
+    MARKET_CAP = 'Market Capitalization'
+    ENTERPRISE_VALUE = 'Enterprise Value (MRQ)'
+    ENTERPRISE_VALUE_EBITDA = 'Enterprise Value/EBITDA (TTM)'
+    TOTAL_SHARES = 'Total Shares Outstanding (MRQ)'
+    NUM_EMPLOYEES = 'Number of Employees'
+    NUM_SHAREHOLDERS = 'Number of Shareholders'
+    PRICE_TO_EARNINGS_RATIO = 'Price to Earnings Ratio (TTM)'
+    PRICE_TO_REVENUE_RATIO = 'Price to Revenue Ratio (TTM)'
+    PRICE_TO_BOOK = 'Price to Book (FY)'        
+    PRICE_TO_SALES = 'Price to Sales (FY)'
+    QUICK_RATIO = 'Quick Ratio (MRQ)'
+    CURRENT_RATIO = 'Current Ratio (MRQ)'        
+    DEBT_TO_EQUITY_RATIO = 'Debt to Equity Ratio (MRQ)'
+    NET_DEBT = 'Net Debt (MRQ)'
+    TOTAL_DEBT = 'Total Debt (MRQ)'
+    TOTAL_ASSETS = 'Total Assets (MRQ)'
+    RETURN_ON_ASSETS = 'Return on Assets (TTM)'
+    RETURN_ON_EQUITY = 'Return on Equity (TTM)'
+    RETURN_ON_INVESTED_CAPITOL = 'Return on Invested Capital (TTM)'
+    REVENUE_PER_EMPLOYEE = 'Revenue per Employee (TTM)'
+    AVERAGE_VOL_10DAY = 'Average Volume (10 day)'
+    ONE_YEAR_BETA = '1-Year Beta'
+    YEAR_HIGH = '52 Week High'
+    YEAR_LOW = '52 Week Low'
+    DIVIDENDS_PAID = 'Dividends Paid (FY)'
+    DIVIDENDS_YIELD = 'Dividends Yield (FY)'
+    DIVIDENDS_PER_SHARE = 'Dividends per Share (FY)'
+    NET_MARGIN = 'Net Margin (TTM)'
+    GROSS_MARGIN = 'Gross Margin (TTM)'
+    OPERATING_MARGIN = 'Operating Margin (TTM)'
+    PRETAX_MARGIN = 'Operating Margin (TTM)'
+    BASIC_EPS_FY = 'Basic EPS (FY)'
+    BASIC_EPS_TTM = 'Basic EPS (TTM)'
+    EPS_DILUTED = 'EPS Diluted (FY)'
+    NET_INCOME = 'Net Income (FY)'
+    EBITDA = 'EBITDA (TTM)'
+    GROSS_PROFIT_MRQ = 'Gross Profit (MRQ)'
+    GROSS_PROFIT_YR = 'Gross Profit (FY)'
+    LAST_YEAR_REVENUE = 'Last Year Revenue (FY)'
+    TOTAL_REVENUE = 'Total Revenue (FY)'
+    FREE_CASH_FLOW = 'Free Cash Flow (TTM)'

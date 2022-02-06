@@ -5,9 +5,10 @@ from .enums import *
 
 
 class Log():
-    def __init__(self):
+    def __init__(self) -> None:
         self.log_directory_path = "StockAnalysisTool/logs"
         self.log_file_path      = "StockAnalysisTool/logs" + "/" + str(datetime.date.today()) + ".txt"
+        return
 
     def get_current_time(self) -> str:
         return datetime.datetime.now().strftime("%H:%M:%S")
@@ -23,7 +24,7 @@ class Log():
             print(f"ERROR: || {e}, {type(e).__name__} {__file__} {e.__traceback__.tb_lineno}" )
         return
 
-    def file_create(self):
+    def file_create(self) -> None:
         try:
             if not os.path.exists(self.log_file_path):
                 # create the file
@@ -38,7 +39,7 @@ class Log():
             print(f"ERROR: || {e}, {type(e).__name__} {__file__} {e.__traceback__.tb_lineno}" )
         return
 
-    def write(self, text):
+    def write(self, text) -> None:
         """Writes to the end of the log file"""
         try:
             file_path="StockAnalysisTool/logs/" + str(datetime.date.today()) + ".txt"
@@ -63,7 +64,7 @@ class Log():
                 self.write(f"{result} ERROR: || {e}, {error_type} {filename} {tb_lineno}")
                 return
             else:
-                print(     result)
+                print(result)
                 self.write(result)
         except Exception as e:
             print(e)

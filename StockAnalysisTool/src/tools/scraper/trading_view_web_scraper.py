@@ -6,9 +6,8 @@ from selenium.webdriver.support.expected_conditions import NoSuchElementExceptio
 from selenium.webdriver.common.by                   import By
 from selenium.webdriver.chrome.options              import Options
 from pprint                                         import PrettyPrinter
-
-from ..util.enums   import *
-from ..util.globals import G
+from ..util.enums                                   import *
+from ..util.globals                                 import G
 
 
 class TradingViewWebScraper():

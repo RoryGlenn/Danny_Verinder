@@ -18,7 +18,7 @@ class TradingViewWebScraper():
         self._total_shares_outstanding = dict()
         self._eps                      = dict()
         self._dividends                = dict()
-        self._trading_below_value            = dict()
+        self._trading_below_value      = dict()
         self._data                     = dict()
         return
 
@@ -114,7 +114,6 @@ class TradingViewWebScraper():
                     self._trading_below_value[stock_symbol][TradingViewData.DEBT_TO_EQUITY_RATIO] = False if debt_to_equity_ratio > 0 else True
                     break
         return
-
 
     def __reset_data(self) -> None:
         self._current_price            = dict()

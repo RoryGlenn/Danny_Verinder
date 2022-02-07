@@ -10,7 +10,14 @@ from ..util.enums                                   import *
 from ..util.globals                                 import G
 
 
-class TradingViewWebScraper():
+"""
+Spiders   - define how a site should be scraped. Contains all the logic to extract the data from the site.
+Selectors - Mechanisms for selecting data.
+Items     - data extracted from the selector.
+
+"""
+
+class TradingViewSpider():
     def __init__(self, is_gui: bool=False) -> None:
         self._is_gui                   = is_gui
         self._browser                  = None
@@ -37,7 +44,7 @@ class TradingViewWebScraper():
     def __set_current_price(self, stock_symbol: str) -> None:
         if stock_symbol not in self._current_price.keys():
             try:
-                categories = self._browser.find_elements(By.XPATH, TradingViewData.CURRENT_PRICE_XPATH)
+                categories = self._browser.find_elements(By.XPATH, Selectors.CURRENT_PRICE_XPATH)
 
                 for category in categories:
                     self._current_price[stock_symbol] = category.text
@@ -46,52 +53,52 @@ class TradingViewWebScraper():
         return
 
     def __set_shares(self, stock_symbol: str, data: list) -> None:
-        if TradingViewData.TOTAL_SHARES in data:
-            self._total_shares_outstanding[stock_symbol] = dict({TradingViewData.TOTAL_SHARES: '-'})
+        if TVItems.TOTAL_SHARES in data:
+            self._total_shares_outstanding[stock_symbol] = dict({TVItems.TOTAL_SHARES: '-'})
 
             while len(data) > 0:
-                if data.pop(0) == TradingViewData.TOTAL_SHARES:
-                    self._total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES] = data.pop(0)
+                if data.pop(0) == TVItems.TOTAL_SHARES:
+                    self._total_shares_outstanding[stock_symbol][TVItems.TOTAL_SHARES] = data.pop(0)
                     break
         return
 
     def __set_dividends(self, stock_symbol: str, data: list) -> None:
-        if TradingViewData.DIVIDENDS in data:
-            if data[0] == TradingViewData.DIVIDENDS:
+        if TVItems.DIVIDENDS in data:
+            if data[0] == TVItems.DIVIDENDS:
                 self._dividends[stock_symbol] = [{
-                    TradingViewData.DIVIDENDS_PAID:      '-',
-                    TradingViewData.DIVIDENDS_YIELD:     '-',
-                    TradingViewData.DIVIDENDS_PER_SHARE: '-'}]
+                    TVItems.DIVIDENDS_PAID:      '-',
+                    TVItems.DIVIDENDS_YIELD:     '-',
+                    TVItems.DIVIDENDS_PER_SHARE: '-'}]
 
                 while len(data) > 0:
                     dividend_title = data.pop(0)
 
-                    if dividend_title == TradingViewData.DIVIDENDS_PAID:
-                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PAID] = data.pop(0)
-                    elif dividend_title == TradingViewData.DIVIDENDS_YIELD:
-                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_YIELD] = data.pop(0)
-                    elif dividend_title == TradingViewData.DIVIDENDS_PER_SHARE:
-                        self._dividends[stock_symbol][0][TradingViewData.DIVIDENDS_PER_SHARE] = data.pop(0)
+                    if dividend_title == TVItems.DIVIDENDS_PAID:
+                        self._dividends[stock_symbol][0][TVItems.DIVIDENDS_PAID] = data.pop(0)
+                    elif dividend_title == TVItems.DIVIDENDS_YIELD:
+                        self._dividends[stock_symbol][0][TVItems.DIVIDENDS_YIELD] = data.pop(0)
+                    elif dividend_title == TVItems.DIVIDENDS_PER_SHARE:
+                        self._dividends[stock_symbol][0][TVItems.DIVIDENDS_PER_SHARE] = data.pop(0)
         return
     
     def __set_eps(self, stock_symbol: str, data: list) -> None:
         # price to earnings ratio
-        if TradingViewData.PRICE_TO_EARNINGS_RATIO in data:
-            self._eps[stock_symbol] = dict({TradingViewData.PRICE_TO_EARNINGS_RATIO: '-'})
+        if TVItems.PRICE_TO_EARNINGS_RATIO in data:
+            self._eps[stock_symbol] = dict({TVItems.PRICE_TO_EARNINGS_RATIO: '-'})
 
             while len(data) > 0:
-                if data.pop(0) == TradingViewData.PRICE_TO_EARNINGS_RATIO:
-                    self._eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO] = data.pop(0)
+                if data.pop(0) == TVItems.PRICE_TO_EARNINGS_RATIO:
+                    self._eps[stock_symbol][TVItems.PRICE_TO_EARNINGS_RATIO] = data.pop(0)
                     break
         return
 
     def __set_data(self, stock_symbol: str) -> None:
         self._data[stock_symbol] = {
-            TradingViewData.CURRENT_PRICE:           self._current_price[stock_symbol],
-            TradingViewData.TOTAL_SHARES:            self._total_shares_outstanding[stock_symbol][TradingViewData.TOTAL_SHARES],
-            TradingViewData.DIVIDENDS:               self._dividends[stock_symbol][0], 
-            TradingViewData.PRICE_TO_EARNINGS_RATIO: self._eps[stock_symbol][TradingViewData.PRICE_TO_EARNINGS_RATIO],
-            TradingViewData.TRADING_BELOW_BALUE:     self._trading_below_value[stock_symbol][TradingViewData.TRADING_BELOW_BALUE]
+            TVItems.CURRENT_PRICE:           self._current_price[stock_symbol],
+            TVItems.TOTAL_SHARES:            self._total_shares_outstanding[stock_symbol][TVItems.TOTAL_SHARES],
+            TVItems.DIVIDENDS:               self._dividends[stock_symbol][0], 
+            TVItems.PRICE_TO_EARNINGS_RATIO: self._eps[stock_symbol][TVItems.PRICE_TO_EARNINGS_RATIO],
+            TVItems.TRADING_BELOW_BALUE:     self._trading_below_value[stock_symbol][TVItems.TRADING_BELOW_BALUE]
         }
         return
     
@@ -105,13 +112,13 @@ class TradingViewWebScraper():
         
         """
 
-        if TradingViewData.DEBT_TO_EQUITY_RATIO in data:
+        if TVItems.DEBT_TO_EQUITY_RATIO in data:
             self._trading_below_value[stock_symbol] = dict({"Trading Below Value": False})
 
             while len(data) > 0:
-                if data.pop(0) == TradingViewData.DEBT_TO_EQUITY_RATIO:
+                if data.pop(0) == TVItems.DEBT_TO_EQUITY_RATIO:
                     debt_to_equity_ratio = float(data.pop(0))
-                    self._trading_below_value[stock_symbol][TradingViewData.DEBT_TO_EQUITY_RATIO] = False if debt_to_equity_ratio > 0 else True
+                    self._trading_below_value[stock_symbol][TVItems.DEBT_TO_EQUITY_RATIO] = False if debt_to_equity_ratio > 0 else True
                     break
         return
 
@@ -136,7 +143,7 @@ class TradingViewWebScraper():
 
             self.__set_current_price(stock_symbol)
 
-            categories = self._browser.find_elements(By.XPATH, TradingViewData.GENERAL_DATA_XPATH)
+            categories = self._browser.find_elements(By.XPATH, Selectors.GENERAL_DATA_XPATH)
 
             for category in categories:
                 try:

@@ -1,6 +1,6 @@
 import os
 
-from tools.scraper.trading_view_web_scraper import TradingViewWebScraper
+from tools.scraper.trading_view_web_scraper import TradingViewSpider
 from tools.util.globals                     import G
 
 
@@ -8,7 +8,7 @@ def run() -> None:
     G.log.directory_create()
     G.log.file_create()
     
-    TradingViewWebScraper().scrape_data()
+    TradingViewSpider().scrape_data()
     return
 
 
